@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title> AI Career Guidance Portal</title>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Orbitron:wght@500&display=swap" rel="stylesheet">
+<!-- Font Awesome for Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
+<style>
+/* ======= Preserve your previous CSS exactly ======= */
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #101626, #1e2a47, #0c1a2e);
+    color: #eee;
+    overflow-x: hidden;
+}
+
+header {
+    text-align: center;
+    padding: 2rem;
+    color: #fff;
+    font-family: 'Orbitron', sans-serif;
+    text-shadow: 0 0 8px rgba(75,93,255,0.4), 0 0 15px rgba(72,201,176,0.3);
+}
+
+header h1 { font-size: 2.5rem; color: #fff; }
+header p { font-size: 1.1rem; color: #fff; }
+
+.container {
+    max-width: 1000px;
+    margin: 2rem auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 0 1rem;
+}
+
+.card {
+    background: #000;
+    border: 1px solid #4B5DFF;
+    border-radius: 16px;
+    box-shadow: 0 0 10px rgba(75,93,255,0.25);
+    padding: 2rem;
+    transition: all 0.3s ease-in-out;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 15px rgba(72,201,176,0.35);
+    border-color: #48C9B0;
+}
+
+.card h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.5rem;
+    color: #4B5DFF;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1rem;
+}
+
+/* category boxes row (kept visually consistent) */
+.category-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 1rem;
+}
+.category-box {
+    background: #111;
+    color: #4B5DFF;
+    border: 1px solid #4B5DFF;
+    padding: 0.45rem 0.9rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.18s;
+    font-size: 0.9rem;
+}
+.category-box:hover {
+    background: #4B5DFF;
+    color: #fff;
+    box-shadow: 0 0 10px rgba(75,93,255,0.5);
+}
+.category-box.active {
+    background: #48C9B0;
+    color: #000;
+    border-color: #48C9B0;
+    box-shadow: 0 0 12px rgba(72,201,176,0.45);
+}
+
+/* rest of your original styles */
+.category-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 1rem;
+}
+
+.category-btn {
+    background: #111;
+    color: #4B5DFF;
+    border: 1px solid #4B5DFF;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.category-btn:hover {
+    background: #4B5DFF;
+    color: #fff;
+    box-shadow: 0 0 10px rgba(75,93,255,0.5);
+}
+
+/* autocomplete */
+.autocomplete-wrapper {
+    position: relative;
+}
+
+#career-input {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #4B5DFF;
+    border-radius: 10px;
+    background: #111;
+    color: #fff;
+    font-family: inherit;
+    font-size: 0.95rem;
+    transition: all 0.3s;
+    box-sizing: border-box;
+}
+
+#skill-suggestions {
+    position: absolute;
+    z-index: 20;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    background: #111;
+    border: 1px solid #48C9B0;
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.6);
+    display: none;
+}
+
+.suggestion-item {
+    padding: 0.6rem 0.9rem;
+    cursor: pointer;
+    color: #eee;
+}
+
+.suggestion-item:hover {
+    background: #1e2a47;
+    color: #48C9B0;
+}
+
+textarea, input[type="file"], input[type="number"], #career-input {
+    width: 100%;
+    padding: 0.8rem;
+    margin: 0.5rem 0;
+    border: 1px solid #4B5DFF;
+    border-radius: 10px;
+    background: #111;
+    color: #fff;
+    font-family: inherit;
+    font-size: 0.95rem;
+    transition: all 0.3s;
+    box-sizing: border-box;
+}
+
+textarea:focus, input:focus {
+    outline: none;
+    border-color: #48C9B0;
+    box-shadow: 0 0 8px rgba(72,201,176,0.4);
+}
+
+button {
+    background: linear-gradient(90deg, #4B5DFF, #48C9B0);
+    color: #fff;
+    padding: 0.7rem 1.5rem;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s;
+    box-shadow: 0 0 8px rgba(75,93,255,0.3), 0 0 15px rgba(72,201,176,0.25);
+    margin-top: 1rem;
+}
+
+button:hover:not(:disabled) {
+    transform: scale(1.05);
+    box-shadow: 0 0 12px rgba(72,201,176,0.4), 0 0 20px rgba(75,93,255,0.3);
+}
+
+button:disabled {
+    background: #333;
+    cursor: not-allowed;
+    opacity: 0.7;
+    box-shadow: none;
+}
+
+.output {
+    margin-top: 0.5rem;
+    padding: 0.8rem;
+    background: #111;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    max-height: 300px;
+    overflow-y: auto;
+    color: #fff;
+    border: 1px solid rgba(75,93,255,0.3);
+}
+
+/* chat */
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    height: 350px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #000;
+    border: 1px solid rgba(75,93,255,0.3);
+}
+
+.chat-messages {
+    flex: 1;
+    padding: 1rem;
+    overflow-y: auto;
+    background: #111;
+}
+
+.chat-input {
+    display: flex;
+    padding: 0.8rem;
+    gap: 0.5rem;
+    background: #111;
+}
+
+.chat-input input {
+    flex: 1;
+    padding: 0.7rem;
+    border-radius: 10px;
+    border: 1px solid #4B5DFF;
+    background: #111;
+    color: #fff;
+    font-size: 0.95rem;
+}
+
+.message {
+    margin-bottom: 1rem;
+    padding: 0.5rem 0.8rem;
+    border-radius: 12px;
+    max-width: 80%;
+    opacity: 0;
+    animation: fadeIn 0.5s forwards;
+    line-height: 1.4;
+}
+
+.message.user {
+    background: #4B5DFF;
+    color: #fff;
+    margin-left: auto;
+    text-align: right;
+}
+
+.message.bot {
+    background: #48C9B0;
+    color: #000;
+    margin-right: auto;
+    text-align: left;
+}
+
+.temporary-thinking {
+    background: #555 !important;
+    color: #fff !important;
+    opacity: 1 !important;
+}
+
+.clear-btn {
+    background: #c0392b;
+}
+
+.clear-btn:hover:not(:disabled) {
+    background: #e74c3c;
+    transform: scale(1.03);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+footer {
+    text-align: center;
+    padding: 1rem;
+    color: #b0c4de;
+    margin-top: 2rem;
+}
+
+@media (max-width: 900px) {
+    .container {
+        margin: 1rem auto;
+        gap: 1rem;
+    }
+    .card {
+        padding: 1.5rem;
+    }
+}
+</style>
+</head>
+<body onload="initializeApp()">
+
+<header>
+    <h1> Pathwise AI ✨</h1>
+    <p>🎯 Find your career path | 📄 Analyze resumes | 🤖 Chat with AI</p>
+</header>
+
+<div class="container">
+
+  <!-- Top tab buttons -->
+  <div style="display:flex; gap:10px; justify-content:center;">
+    <button id="tab-predict" onclick="switchTab('predict')">📊 Career Predictor</button>
+    <button id="tab-resume" onclick="switchTab('resume')">📄 Resume Analyzer</button>
+    <button id="tab-chat" onclick="switchTab('chat')">🤖 Career Chatbot</button>
+  </div>
+
+  <!-- Career Predictor Card -->
+  <div id="content-predict" class="card">
+      <h2>📊 Career Prediction</h2>
+
+      <p style="margin-bottom:6px;">1. Select a Career Category (click a box):</p>
+      <div id="category-row" class="category-row" aria-hidden="false">
+        <!-- category boxes injected by JS -->
+      </div>
+
+      <p style="margin-top:12px;">2. Enter your skills, interests, or hobbies (autocomplete supported):</p>
+      <div class="autocomplete-wrapper" style="position:relative;">
+        <input type="text" id="career-input" placeholder="💡 Python, Data Analysis, Marketing Strategy..." oninput="onInputChange(this.value)" autocomplete="off"/>
+        <div id="skill-suggestions" role="listbox"></div>
+      </div>
+
+      <p style="margin-top:10px;">3. Number of careers to show (1-5):</p>
+      <input type="number" id="career-count" min="1" max="5" value="1" style="width:120px;" />
+
+      <button onclick="predictCareer()" id="predict-button" style="margin-top:12px;">🔮 Predict Career</button>
+      <div id="career-output" class="output">✨ Enter skills above and click Predict Career to see your best matches.</div>
+  </div>
+
+  <!-- Resume Analyzer Card -->
+  <div id="content-resume" class="card" style="display:none;">
+      <h2>📄 Resume Analysis</h2>
+      <p>Upload your resume (plain text or PDF). The AI will extract skills and predict a best-fit career + recommended education.</p>
+
+      <input type="file" id="resume-upload" accept=".txt,.pdf" />
+      <p style="margin-top:8px;">Or paste resume text below:</p>
+      <textarea id="resume-text" rows="8" placeholder="Paste resume text here..."></textarea>
+
+      <button onclick="analyzeResume()" id="analyze-button">🕵 Analyze Resume</button>
+      <div id="resume-output" class="output">📊 Upload or paste a resume and click Analyze.</div>
+  </div>
+
+  <!-- Chatbot Card -->
+  <div id="content-chat" class="card" style="display:none;">
+      <h2>🤖 Career Chatbot</h2>
+      <div class="chat-container">
+        <div id="chat-messages" class="chat-messages">
+          <div class="message bot" style="opacity:1;">Hello! I'm your AI Career Counselor. Ask me about job trends, skills, or education paths.</div>
+        </div>
+
+        <div class="chat-input" style="padding-top:10px;">
+          <input id="chat-input" placeholder="💬 Ask about careers, skills, jobs..." onkeypress="if(event.key==='Enter') sendChat()" />
+          <button id="chat-send" onclick="sendChat()">📩 Send</button>
+        </div>
+      </div>
+
+      <button class="clear-btn" onclick="clearChat()">🧹 Clear Chat History</button>
+  </div>
+
+</div>
+
+<footer>
+    <p>🌟 &copy; 2025 AI Career Guidance System </p>
+</footer>
+<script>
+/* ================== Client JS ================== */
+
+
+let activeCategory = null;
+const API_BASE = ""; // if same server, leave empty
+
+// --- Initialization ---
+async function initializeApp(){
+    try {
+        const res = await fetch(`${API_BASE}/get_categories_and_skills`);
+        const data = await res.json();
+        renderCategoryBoxes(data.categories);
+    } catch(err){
+        console.warn("Error fetching categories:", err);
+    }
+}
+
+// --- Render category boxes ---
+function renderCategoryBoxes(categories){
+    const row = document.getElementById('category-row');
+    row.innerHTML = '';
+    categories.forEach(cat => {
+        const div = document.createElement('div');
+        div.className = 'category-box';
+        div.innerHTML = `<i class="fa-solid fa-circle-notch"></i> ${cat}`;
+        div.dataset.category = cat;
+        div.onclick = () => onCategoryClick(cat, div);
+        row.appendChild(div);
+    });
+}
+
+// --- Category click handler ---
+async function onCategoryClick(category, element){
+    activeCategory = category;
+    document.querySelectorAll('.category-box').forEach(b => b.classList.remove('active'));
+    element.classList.add('active');
+
+    let rows = [];
+    try {
+        const res = await fetch(`${API_BASE}/get_category_rows?category=${encodeURIComponent(category)}`);
+        const data = await res.json();
+        rows = data.rows || [];
+    } catch(err){
+        console.warn("Error fetching category rows:", err);
+    }
+
+    showSuggestionList(rows);
+}
+
+// --- Show dropdown suggestions ---
+function showSuggestionList(list){
+    const box = document.getElementById('skill-suggestions');
+    box.innerHTML = '';
+    if (!list || list.length === 0){
+        box.style.display = 'none';
+        return;
+    }
+    list.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'suggestion-item';
+        div.innerText = item;
+        div.onclick = () => {
+            const inp = document.getElementById('career-input');
+            inp.value = item;
+            box.style.display = 'none';
+        };
+        box.appendChild(div);
+    });
+    box.style.display = 'block';
+}
+
+// --- Autocomplete while typing ---
+function onInputChange(value){
+    const term = value.trim().toLowerCase();
+    const box = document.getElementById('skill-suggestions');
+    const items = Array.from(box.children);
+    items.forEach(item => {
+        item.style.display = item.innerText.toLowerCase().includes(term) ? 'block' : 'none';
+    });
+    box.style.display = items.some(i=>i.style.display!=='none') ? 'block' : 'none';
+}
+
+// -------------------- CAREER PREDICTOR (UNCHANGED) --------------------
+async function predictCareer(){
+    const inp = document.getElementById('career-input').value.trim();
+    const countEl = document.getElementById('career-count');
+    const output = document.getElementById('career-output');
+    if (!inp){ output.innerHTML = "❌ Please select a category and a row first."; return; }
+
+    let count = parseInt(countEl.value)||1;
+    if(count<1) count=1; if(count>5) count=5;
+    output.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
+
+    try{
+        const res = await fetch(`${API_BASE}/predict-career`, {
+            method:"POST",
+            headers: {"Content-Type":"application/json"},
+            body: JSON.stringify({skills: inp, count: count})
+        });
+        const data = await res.json();
+        if(data.prediction && data.prediction.length){
+            output.innerHTML = data.prediction.map(p=>{
+                return `<div style="margin-bottom:10px;">
+                    <p style="color:#48C9B0;font-weight:700;">${p.career} <small style="color:#9bd3c0">Score:${p.score}</small></p>
+                    <p><strong>Category:</strong> ${p.category}</p>
+                    <p><strong>Recommended Education:</strong> ${p.education}</p>
+                </div>`;
+            }).join('');
+        } else {
+            output.innerHTML = "⚠️ No match found.";
+        }
+    } catch(err){
+        console.error(err);
+        output.innerHTML = "❌ Error contacting server.";
+    }
+}
+
+// --- Resume Analyzer ---
+async function analyzeResume(){
+    const fileInput = document.getElementById('resume-upload');
+    const textArea = document.getElementById('resume-text');
+    const output = document.getElementById('resume-output');
+    let textToSend = "";
+
+    if(fileInput.files && fileInput.files.length>0){
+        try { textToSend = await fileInput.files[0].text(); }
+        catch(e){ output.innerHTML = "❌ Cannot read uploaded file."; return; }
+    } else if(textArea.value.trim()){ textToSend = textArea.value.trim(); }
+    else { output.innerHTML = "❌ Please upload or paste resume."; return; }
+
+    output.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Analyzing...';
+
+    try{
+        const res = await fetch(`${API_BASE}/analyze_resume`, {
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body: JSON.stringify({resume_text: textToSend})
+        });
+        const data = await res.json();
+        output.innerHTML = `
+            <p style="color:#48C9B0;font-weight:700;">✅ Analysis Complete</p>
+            <p><strong>Predicted Career:</strong> ${data.career_details.career}</p>
+            <p><strong>Recommended Education:</strong> ${data.career_details.education}</p>
+            <p><strong>Extracted Skills:</strong> ${data.extracted_skills || "None"}</p>
+        `;
+    } catch(err){
+        console.error(err);
+        output.innerHTML = "❌ Error analyzing resume.";
+    }
+}
+
+// --- Gemini Chatbot ---
+async function sendChat() {
+    const input = document.getElementById('chat-input');
+    const text = input.value.trim();
+    if (!text) return;
+
+    appendChatMessage('user', text);
+    input.value = '';
+    appendChatMessage('bot', '<i class="fa-solid fa-hourglass-start fa-spin"></i> Thinking...', true);
+
+    try {
+        const res = await fetch(`/chatbot`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message: text })
+        });
+
+        const data = await res.json();
+        document.querySelector('.temporary-thinking')?.remove();
+
+        let botReply = "No response from AI.";
+        if (data && data.response) {
+            if (typeof data.response === "string") {
+                botReply = data.response;
+            } else if (data.response.output_text) {
+                botReply = data.response.output_text;
+            }
+        }
+
+        appendChatMessage('bot', botReply);
+
+    } catch(err) {
+        console.error(err);
+        document.querySelector('.temporary-thinking')?.remove();
+        appendChatMessage('bot', "❌ Error connecting to Gemini AI.");
+    }
+}
+
+// --- Append message ---
+function appendChatMessage(role, text, temp=false){
+    const box = document.getElementById('chat-messages');
+    const div = document.createElement('div');
+    div.className = 'message ' + (role==='user'?'user':'bot');
+    if(temp) div.classList.add('temporary-thinking');
+    div.innerHTML = text.replace(/\n/g,'<br>');
+    box.appendChild(div);
+    box.scrollTop = box.scrollHeight;
+}
+
+// --- Clear chat ---
+function clearChat(){
+    const box = document.getElementById('chat-messages');
+    box.innerHTML = '<div class="message bot">Hello! I\'m your AI Career Counselor. Ask me about skills, careers, or education paths.</div>';
+}
+
+// --- Tab switching ---
+function switchTab(tab){
+    document.getElementById('content-predict').style.display = (tab==='predict')?'':'none';
+    document.getElementById('content-resume').style.display = (tab==='resume')?'':'none';
+    document.getElementById('content-chat').style.display = (tab==='chat')?'':'none';
+
+    document.getElementById('tab-predict').classList.remove('active');
+    document.getElementById('tab-resume').classList.remove('active');
+    document.getElementById('tab-chat').classList.remove('active');
+    document.getElementById(`tab-${tab}`).classList.add('active');
+}
+
+// --- Close suggestions if click outside ---
+document.addEventListener('click', e=>{
+    const box = document.getElementById('skill-suggestions');
+    const inp = document.getElementById('career-input');
+    if(!box.contains(e.target) && e.target!==inp) box.style.display='none';
+});
+
+// --- Initialize ---
+initializeApp();
+
+</script>
+
+</script>
+
+
+
+
+
+
+</body>
+</html>
